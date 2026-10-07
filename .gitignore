@@ -1,0 +1,12 @@
+build/
+out/
+bin/
+*.o
+*.exe
+*.out
+
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
