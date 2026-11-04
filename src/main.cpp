@@ -3,6 +3,7 @@
 #include <vector>
 #include "parser.h"
 #include "ast.h"
+#include "database.h"
 
 int main() {
     std::cout << "--- DBMS CLI (Variant 7) ---\n";
@@ -10,6 +11,8 @@ int main() {
 
     std::string buffer = "";
     std::string line;
+
+    Database db;
 
     while (true) {
         if (buffer.empty()) std::cout << "> ";
@@ -44,8 +47,15 @@ int main() {
                     auto command = parser.Parse();
                     
                     if (command) {
-                        std::cout << "\n[SUCCESS] Command parsed successfully.\n";
-                        command->Print();
+                        if (auto c = std::dynamic_pointer_cast<CreateCommand>(command)) {
+                            db.ExecuteCreate(*c);
+                        } 
+                        else if (auto i = std::dynamic_pointer_cast<InsertCommand>(command)) {
+                            db.ExecuteInsert(*i);
+                        } 
+                        else if (auto s = std::dynamic_pointer_cast<SelectCommand>(command)) {
+                            db.ExecuteSelect(*s);
+                        }
                     }
                 }
             } catch (const std::exception& e) {
